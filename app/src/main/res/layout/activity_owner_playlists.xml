@@ -7,32 +7,37 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.trexarms.sharedytplaylists.ui.OwnerPlaylistsActivity"
     android:background="@color/colorPrimary"
-    tools:context=".ui.MainActivity"
     >
-
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/recyclerView"
+        android:layout_above="@+id/videoSearchEditText"
         />
+
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/newPlaylistNameEditText"
-        android:hint="New Playlist Name"
+        android:id="@+id/videoSearchEditText"
+        android:hint="Video Search"
         android:background="@color/editBox"
-        android:layout_above="@+id/newPlaylistButton"
+        android:layout_above="@+id/videoSearchButton"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="3dp"/>
+        android:layout_marginBottom="3dp"
+        android:paddingLeft="7dp"
+        android:paddingRight="7dp"
+
+        />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create New Playlist"
-        android:id="@+id/newPlaylistButton"
+        android:text="Search for Videos"
+        android:id="@+id/videoSearchButton"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="15dp"
         android:layout_alignParentRight="true"
