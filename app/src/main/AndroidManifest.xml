@@ -20,7 +20,9 @@
         </activity>
         <activity android:name=".ui.CreateAccountActivity" />
         <activity android:name=".ui.OwnerPlaylistsActivity" />
-        <activity android:name=".ui.SharedPlaylistsActivity"></activity>
+        <activity android:name=".ui.SharedPlaylistsActivity" />
+        <activity android:name=".ui.AddUserActivity" />
+        <activity android:name=".ui.SearchActivity"></activity>
     </application>
 
 </manifest>
