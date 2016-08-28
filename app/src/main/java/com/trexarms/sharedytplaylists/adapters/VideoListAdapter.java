@@ -22,6 +22,7 @@ import com.trexarms.sharedytplaylists.models.VideoObj;
 import com.trexarms.sharedytplaylists.ui.OwnerPlaylistsActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -31,17 +32,19 @@ import butterknife.ButterKnife;
  */
 public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.VideoViewHolder> {
     public static final String TAG = VideoListAdapter.class.getSimpleName();
-    private ArrayList<VideoObj> mVideos = new ArrayList<>();
+    private List<VideoObj> mVideos = new ArrayList<>();
     private Context mContext;
     private String mPlaylistName;
     private String mPlaylistId;
     private String mUId;
 
-    public VideoListAdapter(Context context, ArrayList<VideoObj> videos, String playlistName, String playlistId, String uId) {
+    public VideoListAdapter(Context context, List<VideoObj> videos, String playlistName, String playlistId, String uId) {
         mContext = context;
         mVideos = videos;
         mPlaylistName = playlistName;
         mPlaylistId = playlistId;
+
+
         mUId = uId;
 
     }
@@ -122,5 +125,10 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
             mDescriptionTextView.setText(video.getDescription());
             mPublishedAtTextView.setText(video.getPublishedAt());
         }
+    }
+
+    public void clearData() {
+        // clear the data
+        mVideos.clear();
     }
 }

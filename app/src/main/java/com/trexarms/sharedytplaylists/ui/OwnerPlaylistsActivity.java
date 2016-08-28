@@ -106,7 +106,8 @@ public class OwnerPlaylistsActivity extends AppCompatActivity implements View.On
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(mAdapter != null) mAdapter.cleanup();
+        if(mAdapter != null) mAdapter.clearData();
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -200,7 +201,7 @@ public class OwnerPlaylistsActivity extends AppCompatActivity implements View.On
     }
 
     private void getVideos() {
-        mAdapter = new VideoListAdapter(getApplicationContext(), mVideos, mUId);
+        mAdapter = new VideoListAdapter(getApplicationContext(), mVideos, mPlaylistName, mPlaylistId, mUId);
         mRecyclerView.setAdapter(mAdapter);
         RecyclerView.LayoutManager layoutManager =
                 new LinearLayoutManager(OwnerPlaylistsActivity.this);

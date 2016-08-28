@@ -192,6 +192,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mAdapter != null) mAdapter.clearData();
+        mAdapter.notifyDataSetChanged();
+    }
+
     private void getPlaylists() {
         mAdapter = new PlaylistListAdapter(getApplicationContext(), mPlaylists, mUId);
         mRecyclerView.setAdapter(mAdapter);

@@ -98,4 +98,9 @@ public class PlaylistListAdapter extends RecyclerView.Adapter<PlaylistListAdapte
             mPlaylistDateTextView.setText(playlist.getTimestamp());
         }
     }
+
+    public void clearData() {
+        // clear the data
+        mPlaylists.clear();
+    }
 }
