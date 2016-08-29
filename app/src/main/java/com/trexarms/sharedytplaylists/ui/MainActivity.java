@@ -76,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     String name = user.getDisplayName();
                     mUId = user.getUid();
                     getSupportActionBar().setTitle("Welcome, " + name + "!");
-                    mUserReference = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_USERS).child(mUId).child(Constants.FIREBASE_CHILD_PLAYLISTS);
 
                     mUserReference = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_USERS);
 
@@ -133,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             PlaylistObj playlist = new PlaylistObj(newPlaylistName, dateFormat.format(date), mUId, pushId);
 
             playlistPushRef.setValue(playlist);
+            mUserReference.child(pushId).setValue(true);
             Intent intent = new Intent(MainActivity.this, OwnerPlaylistsActivity.class);
             intent.putExtra("playlistName", newPlaylistName);
             intent.putExtra("playlistId", playlist.getPlaylistId());
@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.actionViewPlaylists) {
+        if (id == R.id.actionViewSharedPlaylists) {
             Intent intent = new Intent(MainActivity.this, SharedPlaylistsActivity.class);
             intent.putExtra("uId", mUId);
             startActivity(intent);
@@ -181,7 +181,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (id == R.id.action_logout) {
             logout();
             return true;
-
         }
         return super.onOptionsItemSelected(item);
     }

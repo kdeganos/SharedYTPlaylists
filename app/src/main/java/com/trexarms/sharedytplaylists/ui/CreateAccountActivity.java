@@ -197,8 +197,7 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
     }
 
     private void addUser(FirebaseUser firebaseUser) {
-        List<String> playlistIds = new ArrayList<>();
-        UserObj user = new UserObj(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail(), playlistIds);
+        UserObj user = new UserObj(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail());
         mDatabaseUsers.child(firebaseUser.getUid()).setValue(user);
     }
 }

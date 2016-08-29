@@ -10,18 +10,17 @@ public class UserObj {
     String userId;
     String name;
     String email;
-    List<String> playlistIds = new ArrayList<>();
+    List<String> ownedPlaylistIds = new ArrayList<>();
+    List<String> sharedPlaylistIds = new ArrayList<>();
     List<String> friendIds = new ArrayList<>();
 
     public UserObj() {
     }
 
-    public UserObj(String userId, String name, String email, List<String> playlistIds) {
+    public UserObj(String userId, String name, String email) {
         this.userId = userId;
         this.name = name;
         this.email = email;
-        this.playlistIds = playlistIds;
-
     }
 
     public String getUserId() {
@@ -37,15 +36,24 @@ public class UserObj {
         return name;
     }
 
+    public List<String> getOwnedPlaylistIds() {
+        return ownedPlaylistIds;
+    }
+    public void addOwnedPlaylistId(String playlistId) {
+        this.ownedPlaylistIds.add(playlistId);
+    }
+    public void setOwnedPlaylistIds(List<String> playlistIds) {
+        this.ownedPlaylistIds = playlistIds;
+    }
 
-    public List<String> getPlaylistIds() {
-        return playlistIds;
+    public List<String> getSharedPlaylistIds() {
+        return sharedPlaylistIds;
     }
     public void addPlaylistId(String playlistId) {
-        this.playlistIds.add(playlistId);
+        this.sharedPlaylistIds.add(playlistId);
     }
     public void setPlaylistIds(List<String> playlistIds) {
-        this.playlistIds = playlistIds;
+        this.sharedPlaylistIds = playlistIds;
     }
 
     public void setName(String name) {

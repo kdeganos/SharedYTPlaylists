@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +27,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by kdega on 8/10/2016.
+ * Created by kdega on 8/28/2016.
  */
-public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.VideoViewHolder> {
+public class OwnerPlaylistVideoListAdapter extends RecyclerView.Adapter<OwnerPlaylistVideoListAdapter.VideoViewHolder> {
     public static final String TAG = VideoListAdapter.class.getSimpleName();
     private List<VideoObj> mVideos = new ArrayList<>();
     private Context mContext;
@@ -38,7 +37,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
     private String mPlaylistId;
     private String mUId;
 
-    public VideoListAdapter(Context context, List<VideoObj> videos, String playlistName, String playlistId, String uId) {
+    public OwnerPlaylistVideoListAdapter(Context context, List<VideoObj> videos, String playlistName, String playlistId, String uId) {
         mContext = context;
         mVideos = videos;
         mPlaylistName = playlistName;
@@ -50,14 +49,14 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
     }
 
     @Override
-    public VideoListAdapter.VideoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public OwnerPlaylistVideoListAdapter.VideoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.video_list_item, parent, false);
         VideoViewHolder viewHolder = new VideoViewHolder(view);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(VideoListAdapter.VideoViewHolder holder, int position) {
+    public void onBindViewHolder(OwnerPlaylistVideoListAdapter.VideoViewHolder holder, int position) {
         holder.bindVideo(mVideos.get(position));
     }
 
@@ -86,37 +85,8 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
         @Override
         public void onClick(View v) {
             final int itemPosition = getLayoutPosition();
-//            Intent intent = new Intent(mContext, VideoDetailActivity.class);
-//            intent.putExtra("position", itemPosition + "");
-//            Log.d(TAG, "onClick: " + mVideos);
-//            intent.putExtra("videos", Parcels.wrap(mVideos));
-//            mContext.startActivity(intent);
 
-            new AlertDialog.Builder(mContext)
-                    .setTitle("Add to playlist")
-                    .setMessage("Do you really want to add this video to your playlist?")
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            Toast.makeText(mContext, "Video Added", Toast.LENGTH_SHORT).show();
-
-                            DatabaseReference playlistRef = FirebaseDatabase.getInstance()
-                                    .getReference(Constants.FIREBASE_CHILD_PLAYLISTS).child(mPlaylistId);
-                            VideoObj video = mVideos.get(itemPosition);
-
-//                            playlistRef.child(Constants.FIREBASE_CHILD_VIDEOS)
-//                                    .child(mVideos.get(itemPosition).getVideoId()).setValue(mVideos.get(itemPosition));
-
-                            playlistRef.child(Constants.FIREBASE_CHILD_VIDEOS)
-                                    .child(video.videoId).setValue(video);
-
-                            Intent intent = new Intent(mContext, OwnerPlaylistsActivity.class);
-                            intent.putExtra("playlistName", mPlaylistName);
-                            intent.putExtra("playlistId", mPlaylistId);
-                            mContext.startActivity(intent);
-                        }})
-                    .setNegativeButton(android.R.string.no, null).show();
 
         }
 

@@ -23,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.trexarms.sharedytplaylists.Constants;
 import com.trexarms.sharedytplaylists.R;
+import com.trexarms.sharedytplaylists.adapters.OwnerPlaylistVideoListAdapter;
 import com.trexarms.sharedytplaylists.adapters.VideoListAdapter;
 import com.trexarms.sharedytplaylists.models.PlaylistObj;
 import com.trexarms.sharedytplaylists.models.VideoObj;
@@ -46,7 +47,7 @@ public class OwnerPlaylistsActivity extends AppCompatActivity implements View.On
     private List<VideoObj> mVideos = new ArrayList<>();
 
     private DatabaseReference mPlaylistReference;
-    private VideoListAdapter mAdapter;
+    private OwnerPlaylistVideoListAdapter mAdapter;
     private ItemTouchHelper mItemTouchHelper;
 
     @Bind(R.id.recyclerView)
@@ -170,6 +171,21 @@ public class OwnerPlaylistsActivity extends AppCompatActivity implements View.On
             return true;
 
         }
+        if (id == R.id.actionViewMyPlaylists) {
+            Intent intent = new Intent(OwnerPlaylistsActivity.this, MainActivity.class);
+            intent.putExtra("uId", mUId);
+            startActivity(intent);
+        }
+        if (id == R.id.actionViewSharedPlaylists) {
+            Intent intent = new Intent(OwnerPlaylistsActivity.this, SharedPlaylistsActivity.class);
+            intent.putExtra("uId", mUId);
+            startActivity(intent);
+        }
+        if (id == R.id.action_logout) {
+            logout();
+            return true;
+
+        }
         return super.onOptionsItemSelected(item);    }
 
     private void logout() {
@@ -212,7 +228,7 @@ public class OwnerPlaylistsActivity extends AppCompatActivity implements View.On
     }
 
     private void getVideos() {
-        mAdapter = new VideoListAdapter(getApplicationContext(), mVideos, mPlaylistName, mPlaylistId, mUId);
+        mAdapter = new OwnerPlaylistVideoListAdapter(getApplicationContext(), mVideos, mPlaylistName, mPlaylistId, mUId);
         mRecyclerView.setAdapter(mAdapter);
         RecyclerView.LayoutManager layoutManager =
                 new LinearLayoutManager(OwnerPlaylistsActivity.this);
