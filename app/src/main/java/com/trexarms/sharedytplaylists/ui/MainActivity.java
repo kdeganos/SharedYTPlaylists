@@ -26,9 +26,14 @@ import com.trexarms.sharedytplaylists.R;
 import com.trexarms.sharedytplaylists.adapters.PlaylistListAdapter;
 import com.trexarms.sharedytplaylists.models.PlaylistObj;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -75,13 +80,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     mUserReference = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_USERS);
 
+
                     mPlaylistReference.addListenerForSingleValueEvent(
                             new ValueEventListener() {
                                 @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    for (DataSnapshot playlistSnapshot : dataSnapshot.getChildren()) {
+                                public void onDataChange(DataSnapshot snapshot) {
+                                    for (DataSnapshot playlistSnapshot : snapshot.getChildren()) {
 
-                                        mPlaylists.add(playlistSnapshot.getValue(PlaylistObj.class));
+                                        String playlistName = (String) playlistSnapshot.child("playlistName").getValue();
+
+                                        String timestamp = (String)playlistSnapshot.child("timestamp").getValue();
+
+                                        String ownerId = (String) playlistSnapshot.child("ownerId").getValue();
+
+                                        String playlistId = (String) playlistSnapshot.child("playlistId").getValue();
+
+                                        PlaylistObj playlist = new PlaylistObj(playlistName, timestamp, ownerId, playlistId);
+
+                                        mPlaylists.add(playlist);
                                     }
                                     getPlaylists();
 
@@ -112,9 +128,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             DatabaseReference playlistPushRef = mPlaylistReference.push();
             String pushId = playlistPushRef.getKey();
             Date date = new Date();
+            DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy 'at' HH:mm:ss");
 
-            PlaylistObj playlist = new PlaylistObj(newPlaylistName, date, mUId);
-            playlist.setPlaylistId(pushId);
+            PlaylistObj playlist = new PlaylistObj(newPlaylistName, dateFormat.format(date), mUId, pushId);
 
             playlistPushRef.setValue(playlist);
             Intent intent = new Intent(MainActivity.this, OwnerPlaylistsActivity.class);
@@ -190,12 +206,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
-    }
-
-    protected void onDestroy() {
-        super.onDestroy();
-        if(mAdapter != null) mAdapter.clearData();
-        mAdapter.notifyDataSetChanged();
+        if(mAdapter != null) {
+            mAdapter.clearData();
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     private void getPlaylists() {
@@ -205,5 +219,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 new LinearLayoutManager(MainActivity.this);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mAdapter != null) {
+            mAdapter.clearData();
+            mAdapter.notifyDataSetChanged();
+        }
     }
 }

@@ -99,16 +99,17 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            Toast.makeText(mContext, "Yaay", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "Video Added", Toast.LENGTH_SHORT).show();
 
                             DatabaseReference playlistRef = FirebaseDatabase.getInstance()
                                     .getReference(Constants.FIREBASE_CHILD_PLAYLISTS).child(mPlaylistId);
+                            VideoObj video = mVideos.get(itemPosition);
 
 //                            playlistRef.child(Constants.FIREBASE_CHILD_VIDEOS)
 //                                    .child(mVideos.get(itemPosition).getVideoId()).setValue(mVideos.get(itemPosition));
 
                             playlistRef.child(Constants.FIREBASE_CHILD_VIDEOS)
-                                    .push().setValue(mVideos.get(itemPosition));
+                                    .child(video.videoId).setValue(video);
 
                             Intent intent = new Intent(mContext, OwnerPlaylistsActivity.class);
                             intent.putExtra("playlistName", mPlaylistName);

@@ -22,13 +22,12 @@ public class PlaylistObj {
 
     public PlaylistObj() {}
 
-    public PlaylistObj(String playlistName, Date timestamp, String ownerId) {
+    public PlaylistObj(String playlistName, String timestamp, String ownerId, String playlistId) {
 
         this.playlistName = playlistName;
-
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        this.timestamp = dateFormat.format(timestamp);
+        this.timestamp = timestamp;
         this.ownerId = ownerId;
+        this.playlistId = playlistId;
 
     }
 

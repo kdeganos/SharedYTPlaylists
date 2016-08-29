@@ -24,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.trexarms.sharedytplaylists.Constants;
 import com.trexarms.sharedytplaylists.R;
 import com.trexarms.sharedytplaylists.adapters.VideoListAdapter;
+import com.trexarms.sharedytplaylists.models.PlaylistObj;
 import com.trexarms.sharedytplaylists.models.VideoObj;
 
 import java.util.ArrayList;
@@ -84,6 +85,10 @@ public class OwnerPlaylistsActivity extends AppCompatActivity implements View.On
                         @Override
                         public void onDataChange(DataSnapshot snapshot) {
                             if (snapshot.getValue() != null) {
+                                for (DataSnapshot videoSnapshot : snapshot.getChildren()) {
+
+                                    mVideos.add(videoSnapshot.getValue(VideoObj.class));
+                                }
                                 getVideos();
                             } else {
                             }
@@ -106,8 +111,10 @@ public class OwnerPlaylistsActivity extends AppCompatActivity implements View.On
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(mAdapter != null) mAdapter.clearData();
-        mAdapter.notifyDataSetChanged();
+        if(mAdapter != null) {
+            mAdapter.clearData();
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -184,6 +191,10 @@ public class OwnerPlaylistsActivity extends AppCompatActivity implements View.On
         super.onStop();
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
+        }
+        if(mAdapter != null) {
+            mAdapter.clearData();
+            mAdapter.notifyDataSetChanged();
         }
     }
 
