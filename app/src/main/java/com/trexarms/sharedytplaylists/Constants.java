@@ -11,6 +11,7 @@ public class Constants {
     public static final String SEARCH_PARAMETER = "q";
 
     public static final String FIREBASE_CHILD_USERS = "users";
+    public static final String FIREBASE_CHILD_SHAREDPLAYLISTS = "sharedPlaylists";
     public static final String FIREBASE_CHILD_OWNERPLAYLISTS = "";
     public static final String FIREBASE_CHILD_PLAYLISTIDS = "playlistIds";
     public static final String FIREBASE_CHILD_PLAYLISTS = "playlists";
