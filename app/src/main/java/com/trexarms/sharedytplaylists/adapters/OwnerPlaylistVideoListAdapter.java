@@ -1,8 +1,10 @@
 package com.trexarms.sharedytplaylists.adapters;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 import com.trexarms.sharedytplaylists.Constants;
 import com.trexarms.sharedytplaylists.R;
+import com.trexarms.sharedytplaylists.models.PlaylistObj;
 import com.trexarms.sharedytplaylists.models.VideoObj;
 import com.trexarms.sharedytplaylists.ui.OwnerPlaylistsActivity;
 
@@ -86,7 +89,8 @@ public class OwnerPlaylistVideoListAdapter extends RecyclerView.Adapter<OwnerPla
         public void onClick(View v) {
             final int itemPosition = getLayoutPosition();
 
-
+            VideoObj video = mVideos.get(itemPosition);
+            watchYoutubeVideo(video.getVideoId());
 
         }
 
@@ -100,5 +104,16 @@ public class OwnerPlaylistVideoListAdapter extends RecyclerView.Adapter<OwnerPla
 
     public void clearData() {
         mVideos.clear();
+    }
+
+    public void watchYoutubeVideo(String id){
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));
+            mContext.startActivity(intent);
+        } catch (ActivityNotFoundException ex) {
+            Intent intent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://www.youtube.com/watch?v=" + id));
+            mContext.startActivity(intent);
+        }
     }
 }

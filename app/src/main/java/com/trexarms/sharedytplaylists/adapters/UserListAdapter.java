@@ -97,9 +97,9 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserVi
                             Toast.makeText(mContext, "Shared with " + user.getName(), Toast.LENGTH_SHORT).show();
 
 
-                            playlistRef.child("sharedUsers").child(user.getUserId()).setValue(true);
+                            playlistRef.child(Constants.FIREBASE_CHILD_SHARED_USERS).child(user.getUserId()).setValue(true);
 
-                            userRef.child("sharedPlaylists").child(mPlaylistId).setValue(true);
+                            userRef.child(Constants.FIREBASE_CHILD_SHARED_PLAYLISTS).child(mPlaylistId).setValue(true);
 
                             Intent intent = new Intent(mContext, OwnerPlaylistsActivity.class);
                             intent.putExtra("playlistName", mPlaylistName);

@@ -95,7 +95,7 @@ public class PlaylistListAdapter extends RecyclerView.Adapter<PlaylistListAdapte
 
         public void bindPlaylist(PlaylistObj playlist) {
             mPlaylistNameTextView.setText(playlist.getPlaylistName());
-            mPlaylistDateTextView.setText(playlist.getTimestamp());
+            mPlaylistDateTextView.setText(playlist.getOwnerName() + " on "+ playlist.getTimestamp());
         }
     }
 

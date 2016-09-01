@@ -13,6 +13,7 @@ public class VideoObj {
     public String title;
     public String description;
     public String thumbnail;
+    public String id;
 
     public VideoObj() {
     }
@@ -54,5 +55,9 @@ public class VideoObj {
 
     public String getThumbnail() {
         return thumbnail;
+    }
+
+    public String getId() {
+        return this.id;
     }
 }

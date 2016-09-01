@@ -228,7 +228,7 @@ public class OwnerPlaylistsActivity extends AppCompatActivity implements View.On
     }
 
     private void getVideos() {
-        mAdapter = new OwnerPlaylistVideoListAdapter(getApplicationContext(), mVideos, mPlaylistName, mPlaylistId, mUId);
+        mAdapter = new OwnerPlaylistVideoListAdapter(this, mVideos, mPlaylistName, mPlaylistId, mUId);
         mRecyclerView.setAdapter(mAdapter);
         RecyclerView.LayoutManager layoutManager =
                 new LinearLayoutManager(OwnerPlaylistsActivity.this);

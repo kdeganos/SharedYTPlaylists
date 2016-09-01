@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String TAG = MainActivity.class.getSimpleName();
 
     private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     private DatabaseReference mUserReference;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private List<PlaylistObj> mPlaylists = new ArrayList<>();
     private String mUId;
+    private String mUserName;
 
     @Bind(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mPlaylistReference = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_PLAYLISTS);
 
         mAuth = FirebaseAuth.getInstance();
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -79,36 +82,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     mUserReference = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CHILD_USERS);
 
-
-                    mPlaylistReference.addListenerForSingleValueEvent(
-                            new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot snapshot) {
-                                    for (DataSnapshot playlistSnapshot : snapshot.getChildren()) {
-
-                                        String playlistName = (String) playlistSnapshot.child("playlistName").getValue();
-
-                                        String timestamp = (String)playlistSnapshot.child("timestamp").getValue();
-
-                                        String ownerId = (String) playlistSnapshot.child("ownerId").getValue();
-
-                                        String playlistId = (String) playlistSnapshot.child("playlistId").getValue();
-
-                                        PlaylistObj playlist = new PlaylistObj(playlistName, timestamp, ownerId, playlistId);
-
-                                        mPlaylists.add(playlist);
-                                    }
-                                    getPlaylists();
-
-
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-
+                    checkPlaylists();
 
                 } else {
                 }
@@ -129,10 +103,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Date date = new Date();
             DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy 'at' HH:mm:ss");
 
-            PlaylistObj playlist = new PlaylistObj(newPlaylistName, dateFormat.format(date), mUId, pushId);
+            PlaylistObj playlist = new PlaylistObj(newPlaylistName, dateFormat.format(date), mUId, mUser.getDisplayName(),pushId);
 
             playlistPushRef.setValue(playlist);
-            mUserReference.child(pushId).setValue(true);
+            mUserReference.child(mUId).child(Constants.FIREBASE_CHILD_OWNED_PLAYLISTS).child(pushId).setValue(true);
             Intent intent = new Intent(MainActivity.this, OwnerPlaylistsActivity.class);
             intent.putExtra("playlistName", newPlaylistName);
             intent.putExtra("playlistId", playlist.getPlaylistId());
@@ -196,6 +170,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onStart() {
         super.onStart();
+        if(mAdapter != null) {
+            mAdapter.clearData();
+            mAdapter.notifyDataSetChanged();
+        }
         mAuth.addAuthStateListener(mAuthListener);
     }
 
@@ -227,5 +205,61 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mAdapter.clearData();
             mAdapter.notifyDataSetChanged();
         }
+    }
+
+    private void checkPlaylists() {
+        new Thread() {
+
+            @Override
+            public void run() {
+
+                mPlaylistReference.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot snapshot) {
+                                mPlaylists = new ArrayList<>();
+                                for (final DataSnapshot playlistSnapshot : snapshot.getChildren()) {
+                                    mUserReference.child(mUser.getUid()).child(Constants.FIREBASE_CHILD_OWNED_PLAYLISTS)
+                                            .child((String) playlistSnapshot.child("playlistId").getValue())
+                                            .addValueEventListener(
+                                                    new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(DataSnapshot dataSnap) {
+                                                            if (dataSnap.getValue() != null) {
+                                                                String playlistName = (String) playlistSnapshot.child("playlistName").getValue();
+
+                                                                String timestamp = (String)playlistSnapshot.child("timestamp").getValue();
+
+                                                                String ownerId = (String) playlistSnapshot.child("ownerId").getValue();
+
+                                                                String ownerName = (String) playlistSnapshot.child("ownerName").getValue();
+
+                                                                String playlistId = (String) playlistSnapshot.child("playlistId").getValue();
+
+                                                                PlaylistObj playlist = new PlaylistObj(playlistName, timestamp, ownerId, ownerName, playlistId);                                                                if(!mPlaylists.contains(playlist)){
+
+                                                                    mPlaylists.add(playlist);
+                                                                    getPlaylists();
+                                                                }
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(DatabaseError databaseError) {
+
+                                                        }
+                                                    }
+                                            );
+
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+            }
+        }.start();
     }
 }

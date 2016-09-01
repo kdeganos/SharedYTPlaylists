@@ -13,20 +13,22 @@ public class PlaylistObj {
     public String playlistId;
     public String playlistName;
     public String ownerId;
+    public String ownerName;
     public List<VideoObj> videoObjects = new ArrayList<>();
     public List<String> videoIds = new ArrayList<>();
     public String timestamp;
 
-    public List<String> sharedUsers = new ArrayList<>();
+    public List<String> sharedUserIds = new ArrayList<>();
 
 
     public PlaylistObj() {}
 
-    public PlaylistObj(String playlistName, String timestamp, String ownerId, String playlistId) {
+    public PlaylistObj(String playlistName, String timestamp, String ownerId, String ownerName, String playlistId) {
 
         this.playlistName = playlistName;
         this.timestamp = timestamp;
         this.ownerId = ownerId;
+        this.ownerName = ownerName;
         this.playlistId = playlistId;
 
     }
@@ -63,17 +65,19 @@ public class PlaylistObj {
     }
 
 
-    public List<String> getSharedUsers() {
-        return sharedUsers;
+    public List<String> getSharedUserIds() {
+        return sharedUserIds;
     }
 
     public void setSharedUsers(List<String> sharedUsers) {
-        this.sharedUsers = sharedUsers;
+        this.sharedUserIds = sharedUsers;
     }
 
     public String getOwnerId() {
         return this.ownerId;
     }
+
+    public String getOwnerName() {return this.ownerName;}
 
 
     public List<String> getVideoIds() {

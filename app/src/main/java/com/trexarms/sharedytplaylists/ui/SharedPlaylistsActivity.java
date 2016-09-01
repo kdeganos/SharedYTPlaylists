@@ -210,6 +210,10 @@ public class SharedPlaylistsActivity extends AppCompatActivity implements View.O
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
+        if(mAdapter != null) {
+            mAdapter.clearData();
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -246,15 +250,13 @@ public class SharedPlaylistsActivity extends AppCompatActivity implements View.O
                             @Override
                             public void onDataChange(DataSnapshot snapshot) {
                                 mPlaylists = new ArrayList<>();
-                                Log.d(TAG, "XXXXXonDataChange: " + String.valueOf(snapshot.getChildren()));
                                 for (final DataSnapshot playlistSnapshot : snapshot.getChildren()) {
-                                    mUserReference.child(Constants.FIREBASE_CHILD_SHAREDPLAYLISTS)
+                                    mUserReference.child(Constants.FIREBASE_CHILD_SHARED_PLAYLISTS)
                                             .child((String) playlistSnapshot.child("playlistId").getValue())
                                             .addValueEventListener(
                                                     new ValueEventListener() {
                                                         @Override
                                                         public void onDataChange(DataSnapshot dataSnap) {
-                                                            Log.d(TAG, "onDataChange: " + String.valueOf(dataSnap));
                                                             if (dataSnap.getValue() != null) {
                                                                 PlaylistObj playlist = filterPlaylists(playlistSnapshot);
                                                                 if(!mPlaylists.contains(playlist)){
@@ -294,11 +296,12 @@ public class SharedPlaylistsActivity extends AppCompatActivity implements View.O
 
         String ownerId = (String) playlistSnapshot.child("ownerId").getValue();
 
+        String ownerName = (String) playlistSnapshot.child("ownerName").getValue();
+
         String playlistId = (String) playlistSnapshot.child("playlistId").getValue();
 
-        PlaylistObj playlist = new PlaylistObj(playlistName, timestamp, ownerId, playlistId);
+        PlaylistObj playlist = new PlaylistObj(playlistName, timestamp, ownerId, ownerName, playlistId);
 
-        Log.d(TAG, "filterPlaylists: " + String.valueOf(mPlaylists));
         return playlist;
 
 //        mPlaylistReference.addListenerForSingleValueEvent(
